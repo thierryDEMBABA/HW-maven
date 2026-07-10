@@ -7,7 +7,7 @@
     <groupId>com.example</groupId>
     <artifactId>hello-world</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>hello-world</name>
 
@@ -34,17 +34,11 @@
     <build>
         <finalName>hello-world</finalName>
         <plugins>
+            <!-- Packaging WAR pour le déploiement sur Tomcat -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.example.App</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
             </plugin>
 
             <!-- JaCoCo : génère les rapports de couverture de code utilisés par SonarQube -->
