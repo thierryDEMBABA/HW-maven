@@ -26,6 +26,8 @@ pipeline {
             steps {
                 echo "Build pour l'environnement : ${params.ENVIRONNEMENT}"
                 echo "Version de l'artefact : ${params.VERSION}"
+                echo "Nom du job : ${env.JOB_NAME}"
+                echo "Numéro du build : ${env.BUILD_NUMBER}"
             }
         }
 
