@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'linux' }
 
     tools {
         maven 'maven'   // remplace par le nom EXACT vu dans Global Tool Configuration
