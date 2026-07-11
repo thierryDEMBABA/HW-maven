@@ -1,0 +1,77 @@
+# Infrastructure CI/CD des TP DevOps : Jenkins + agent SSH + SonarQube + Tomcat
+#
+# Démarrage :   docker compose up -d
+# Arrêt :       docker compose down          (les volumes sont conservés)
+#
+# Avant le premier lancement, copier .env.example vers .env et y renseigner
+# la clé publique SSH de l'agent (voir docker/README.md).
+
+name: devops-tp
+
+services:
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins-v2
+    restart: unless-stopped
+    ports:
+      - "8080:8080"     # interface web Jenkins
+      - "50000:50000"   # port des agents (inbound)
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      # Sauvegardes ThinBackup externalisées sur le PC hôte (TP9)
+      - ../../jenkins-backups:/mnt/backups
+    networks:
+      - devops-network
+
+  jenkins-agent:
+    image: jenkins/ssh-agent:latest
+    container_name: jenkins-agent
+    restart: unless-stopped
+    environment:
+      # Clé publique autorisée à se connecter à l'agent (définie dans .env)
+      - JENKINS_AGENT_SSH_PUBKEY=${JENKINS_AGENT_SSH_PUBKEY}
+    networks:
+      - devops-network
+    # Pas de port publié : Jenkins joint l'agent en SSH via le réseau Docker
+    # (hôte « jenkins-agent », port 22, dans la configuration du nœud agent-linux)
+
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    restart: unless-stopped
+    ports:
+      - "9000:9000"     # interface web SonarQube (vue de Jenkins : http://sonarqube:9000)
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - devops-network
+
+  tomcat:
+    # Image construite depuis docker/tomcat : manager activé, utilisateur
+    # manager-script pour le déploiement Jenkins, accès distant autorisé
+    build: ./tomcat
+    container_name: tomcat
+    restart: unless-stopped
+    ports:
+      - "8081:8080"     # application : http://localhost:8081/hello-world
+                        # (vue de Jenkins : http://tomcat:8080/manager)
+    networks:
+      - devops-network
+
+networks:
+  devops-network:
+    name: devops-network
+
+volumes:
+  # Noms explicites pour réutiliser les volumes existants de l'installation actuelle
+  jenkins_home:
+    name: jenkins_home
+  sonarqube_data:
+    name: sonarqube_data
+  sonarqube_extensions:
+    name: sonarqube_extensions
+  sonarqube_logs:
+    name: sonarqube_logs

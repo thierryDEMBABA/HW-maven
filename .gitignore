@@ -1,1 +1,4 @@
 target
+
+# Secrets locaux du docker compose (clé SSH de l'agent)
+docker/.env
