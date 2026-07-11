@@ -11,8 +11,22 @@ Projet Java/Maven support des travaux pratiques **DevOps** (IF2I 1ère année) :
 | `com.example.geometry.CircleCalculator` | Calcul du périmètre d'un cercle à partir du rayon ou du diamètre |
 | `src/main/webapp` | Interface web JSP (`index.jsp`) déployée sur Tomcat : démo des deux modules avec formulaire de calcul |
 | `src/test/java` | Tests unitaires JUnit 4 (14 tests) couvrant les deux modules |
-| `docker/tomcat` | Dockerfile et configuration du conteneur Tomcat de déploiement (manager activé, utilisateur `manager-script`) |
+| `docker/` | Infrastructure complète : `docker-compose.yml` (Jenkins, agent SSH, SonarQube, Tomcat) et image Tomcat personnalisée |
 | `Jenkinsfile` | Pipeline d'intégration continue |
+
+## Installation de l'infrastructure
+
+Toute la chaîne CI/CD s'installe en une commande grâce à Docker Compose :
+
+```bash
+cd docker
+cp .env.example .env      # renseigner JENKINS_AGENT_SSH_PUBKEY (clé publique de l'agent)
+docker compose up -d
+```
+
+Les volumes portent des noms explicites (`jenkins_home`, `sonarqube_data`…) : une installation existante est réutilisée telle quelle (jobs, plugins, historique) ; sur une machine vierge, tout est recréé. La configuration à refaire dans ce dernier cas (plugins, outil `maven`, token SonarQube, credentials Tomcat, nœud agent, ThinBackup) est détaillée dans [docker/README.md](docker/README.md).
+
+> Si les conteneurs d'origine créés à la main existent encore, les supprimer d'abord : `docker rm -f jenkins-v2 sonarqube tomcat jenkins-agent` (les volumes sont conservés).
 
 ## Build
 
