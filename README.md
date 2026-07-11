@@ -1,6 +1,6 @@
-# hello-world-maven (HW-maven)
+# DEVOPS-Maven-Jenkins (HW-maven)
 
-Projet Java/Maven support des travaux pratiques **DevOps** (IF2I 1ère année) : il sert de base à une chaîne complète d'intégration et de déploiement continus construite au fil des TP — build automatisé, tests, analyse qualité, déploiement sur Tomcat, pipeline as code, agents distribués et sauvegardes.
+Projet Java/Maven support des travaux pratiques **DevOps** : il sert de base à une chaîne complète d'intégration et de déploiement continus construite au fil des TP — build automatisé, tests, analyse qualité, déploiement sur Tomcat, pipeline as code, agents distribués et sauvegardes.
 
 ## Contenu du projet
 
